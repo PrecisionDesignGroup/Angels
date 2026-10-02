@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>angels — jewelry finder</title>
+  <meta name="description" content="find the same or similar jewelry for the same price or less, with approximate stock.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='5' fill='none' stroke='%23a07c4b' stroke-width='1.2'/%3E%3Ccircle cx='8' cy='3' r='1.4' fill='%23a07c4b'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <header>
+      <h1>angels<span class="dot">·</span></h1>
+      <p class="sub">find it again, for the same or less.</p>
+      <p class="status" id="status"></p>
+    </header>
+
+    <form id="form" autocomplete="off">
+      <label class="drop" id="drop">
+        <input type="file" id="file" accept="image/*" hidden>
+        <img id="preview" alt="" hidden>
+        <span class="drop-hint" id="hint">
+          <span class="plus">+</span>
+          drop a photo of the piece<br>
+          <small>or click · or paste</small>
+        </span>
+      </label>
+
+      <div class="fields">
+        <label>
+          <span class="lbl">or image link</span>
+          <input type="url" id="imageUrl" placeholder="https://i.etsystatic.com/…">
+        </label>
+        <label>
+          <span class="lbl">your price</span>
+          <input type="number" id="maxPrice" min="0" step="0.01" placeholder="24.00">
+        </label>
+        <label>
+          <span class="lbl">a few words <em>(optional)</em></span>
+          <input type="text" id="keywords" placeholder="gold herringbone necklace">
+        </label>
+        <label class="check">
+          <input type="checkbox" id="cheaperOnly" checked>
+          <span>only same price or cheaper</span>
+        </label>
+        <button type="submit" id="go">search ⟶</button>
+      </div>
+    </form>
+
+    <section id="results" hidden>
+      <p class="notes" id="notes"></p>
+
+      <div class="block">
+        <h2>etsy <span class="count" id="etsyCount"></span></h2>
+        <ul class="grid" id="etsy"></ul>
+      </div>
+
+      <div class="block">
+        <h2>elsewhere <span class="count" id="webCount"></span></h2>
+        <ul class="grid" id="web"></ul>
+      </div>
+
+      <div class="block">
+        <h2>also sold at</h2>
+        <ul class="stores" id="stores"></ul>
+      </div>
+    </section>
+
+    <section class="block" id="savedBlock" hidden>
+      <h2>kept <span class="count" id="savedCount"></span>
+        <button class="link" id="refresh" type="button">refresh stock</button>
+      </h2>
+      <ul class="grid" id="saved"></ul>
+    </section>
+
+    <footer>
+      <span>stock is approximate · etsy counts come from the listing, other shops show in / out only</span>
+    </footer>
+  </main>
+
+  <template id="card">
+    <li class="card">
+      <a class="thumb" target="_blank" rel="noopener"><img alt="" loading="lazy"></a>
+      <div class="meta">
+        <a class="title" target="_blank" rel="noopener"></a>
+        <span class="store"></span>
+        <span class="row">
+          <span class="price"></span>
+          <span class="stock"></span>
+        </span>
+        <span class="row tags">
+          <span class="tag match"></span>
+          <span class="tag deal" hidden>≤ your price</span>
+          <button class="keep" type="button" title="keep">♡</button>
+        </span>
+      </div>
+    </li>
+  </template>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

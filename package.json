@@ -1,0 +1,12 @@
+{
+  "name": "angels",
+  "version": "0.1.0",
+  "private": true,
+  "description": "find the same or similar jewelry on etsy and the web for the same price or less, with approximate stock.",
+  "type": "module",
+  "engines": { "node": ">=21.7" },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  }
+}
