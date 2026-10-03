@@ -7,7 +7,7 @@ import { extname, join, normalize } from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { lensSearch, hostImage } from './lib/lens.js';
 import { etsyListings, etsyKeywordSearch, listingIdFromUrl } from './lib/etsy.js';
-import { demoResults } from './lib/demo.js';
+import { demoResults, demoListing } from './lib/demo.js';
 
 try { process.loadEnvFile(); } catch { /* no .env — fine */ }
 
@@ -179,8 +179,12 @@ const server = http.createServer(async (req, res) => {
       return send(res, 200, await search({ ...body, maxPrice }));
     }
 
-    const listing = /^\/api\/etsy\/(\d+)$/.exec(pathname);
+    const listing = /^\/api\/etsy\/(\d+|demo-\d+)$/.exec(pathname);
     if (req.method === 'GET' && listing) {
+      if (listing[1].startsWith('demo-')) {
+        const item = demoListing(listing[1]);
+        return item ? send(res, 200, item) : send(res, 404, { error: 'listing not found' });
+      }
       if (!config().etsy) return send(res, 400, { error: 'ETSY_API_KEY not set' });
       const [item] = await etsyListings([listing[1]]);
       return item ? send(res, 200, item) : send(res, 404, { error: 'listing not found' });

@@ -2,100 +2,217 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>angels — jewelry finder</title>
-  <meta name="description" content="find the same or similar jewelry for the same price or less, with approximate stock.">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='5' fill='none' stroke='%23a07c4b' stroke-width='1.2'/%3E%3Ccircle cx='8' cy='3' r='1.4' fill='%23a07c4b'/%3E%3C/svg%3E">
+  <meta name="description" content="find the same or similar jewelry for your price or less, with stock and your margin.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6' fill='%23111'/%3E%3Ccircle cx='8' cy='8' r='1.6' fill='%23d71921'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Doto:wght@600;800&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <header class="bar">
+    <div class="bar-in">
+      <a class="mark" href="#find" data-tab="find">angels<span class="red">.</span></a>
+      <nav class="seg" id="tabs" aria-label="sections">
+        <button type="button" data-tab="find" aria-pressed="true">find</button>
+        <button type="button" data-tab="pieces" aria-pressed="false">pieces <span class="badge" id="piecesBadge"></span></button>
+        <button type="button" data-tab="suppliers" aria-pressed="false">suppliers <span class="badge" id="suppliersBadge"></span></button>
+      </nav>
+      <span class="live" id="status"><i></i><span>demo</span></span>
+    </div>
+  </header>
+
   <main>
-    <header>
-      <h1>angels<span class="dot">·</span></h1>
-      <p class="sub">find it again, for the same or less.</p>
-      <p class="status" id="status"></p>
-    </header>
-
-    <form id="form" autocomplete="off">
-      <label class="drop" id="drop">
-        <input type="file" id="file" accept="image/*" hidden>
-        <img id="preview" alt="" hidden>
-        <span class="drop-hint" id="hint">
-          <span class="plus">+</span>
-          drop a photo of the piece<br>
-          <small>or click · or paste</small>
-        </span>
-      </label>
-
-      <div class="fields">
-        <label>
-          <span class="lbl">or image link</span>
-          <input type="url" id="imageUrl" placeholder="https://i.etsystatic.com/…">
-        </label>
-        <label>
-          <span class="lbl">your price</span>
-          <input type="number" id="maxPrice" min="0" step="0.01" placeholder="24.00">
-        </label>
-        <label>
-          <span class="lbl">a few words <em>(optional)</em></span>
-          <input type="text" id="keywords" placeholder="gold herringbone necklace">
-        </label>
-        <label class="check">
-          <input type="checkbox" id="cheaperOnly" checked>
-          <span>only same price or cheaper</span>
-        </label>
-        <button type="submit" id="go">search ⟶</button>
-      </div>
-    </form>
-
-    <section id="results" hidden>
-      <p class="notes" id="notes"></p>
-
-      <div class="block">
-        <h2>etsy <span class="count" id="etsyCount"></span></h2>
-        <ul class="grid" id="etsy"></ul>
+    <!-- ── find ─────────────────────────────────────────────────── -->
+    <section class="tab" id="tab-find">
+      <div class="intro">
+        <p class="eyebrow">01 · find</p>
+        <h1>find it again.</h1>
+        <p class="lede">drop a photo of a piece you sell. angels looks across etsy and the web for the same piece at your price or less, with stock left and the margin you'd make.</p>
       </div>
 
-      <div class="block">
-        <h2>elsewhere <span class="count" id="webCount"></span></h2>
-        <ul class="grid" id="web"></ul>
+      <form id="form" class="finder" autocomplete="off">
+        <label class="drop" id="drop">
+          <input type="file" id="file" accept="image/*" hidden>
+          <img id="preview" alt="" hidden>
+          <span class="drop-hint" id="hint">
+            <span class="plus">+</span>
+            <span>drop a photo</span>
+            <small>or click · or paste</small>
+          </span>
+        </label>
+
+        <div class="stack">
+          <p class="searching" id="searchingFor" hidden></p>
+
+          <div class="group">
+            <p class="group-h">your numbers</p>
+            <label class="cell">
+              <span class="cell-l">sale price<small>what you sell it for</small></span>
+              <span class="money-in"><i>$</i><input type="number" id="maxPrice" min="0" step="0.01" placeholder="24.00" inputmode="decimal"></span>
+            </label>
+            <label class="cell">
+              <span class="cell-l">extra costs<small>packaging + shipping per sale</small></span>
+              <span class="money-in"><i>$</i><input type="number" id="extra" min="0" step="0.01" placeholder="0.00" inputmode="decimal"></span>
+            </label>
+            <label class="cell">
+              <span class="cell-l">etsy fees<small>6.5% + 3% + $0.45</small></span>
+              <input type="checkbox" class="switch" id="fees" checked>
+            </label>
+          </div>
+
+          <div class="group">
+            <p class="group-h">help it search</p>
+            <label class="cell">
+              <span class="cell-l">keywords</span>
+              <input type="text" id="keywords" placeholder="gold herringbone necklace">
+            </label>
+            <label class="cell">
+              <span class="cell-l">image link</span>
+              <input type="url" id="imageUrl" placeholder="https://…">
+            </label>
+          </div>
+
+          <button type="submit" class="primary" id="go">search etsy + web</button>
+        </div>
+      </form>
+
+      <section id="results" hidden>
+        <div class="toolbar">
+          <div class="seg small" id="sortSeg" role="group" aria-label="sort">
+            <button type="button" data-sort="price" aria-pressed="true">price</button>
+            <button type="button" data-sort="margin" aria-pressed="false">margin</button>
+            <button type="button" data-sort="stock" aria-pressed="false">stock</button>
+            <button type="button" data-sort="match" aria-pressed="false">match</button>
+          </div>
+          <label class="select-pill">
+            <select id="show" aria-label="show">
+              <option value="cheaper">at or under sale price</option>
+              <option value="profit">profitable only</option>
+              <option value="all">everything</option>
+            </select>
+          </label>
+          <label class="switch-row">
+            <input type="checkbox" class="switch" id="hideSold" checked>
+            <span>hide sold out</span>
+          </label>
+          <button class="pill" id="savePiece" type="button">+ save as my piece</button>
+        </div>
+
+        <p class="notes" id="notes"></p>
+
+        <div class="sect">
+          <h2>etsy <span class="count" id="etsyCount"></span></h2>
+          <ul class="grid" id="etsy"></ul>
+        </div>
+
+        <div class="sect">
+          <h2>elsewhere <span class="count" id="webCount"></span></h2>
+          <ul class="grid" id="web"></ul>
+        </div>
+
+        <div class="sect">
+          <h2>also sold at</h2>
+          <ul class="group list" id="stores"></ul>
+        </div>
+      </section>
+    </section>
+
+    <!-- ── pieces ───────────────────────────────────────────────── -->
+    <section class="tab" id="tab-pieces" hidden>
+      <div class="intro">
+        <p class="eyebrow">02 · pieces</p>
+        <h1>what you stock.</h1>
       </div>
 
-      <div class="block">
-        <h2>also sold at</h2>
-        <ul class="stores" id="stores"></ul>
+      <div class="stats">
+        <div class="stat"><span class="stat-l">on hand</span><span class="stat-n" id="statUnits">0</span><span class="stat-s" id="statUnitsSub">units</span></div>
+        <div class="stat" id="statReorderTile"><span class="stat-l">to reorder</span><span class="stat-n" id="statReorder">0</span><span class="stat-s" id="statReorderSub">all stocked</span></div>
+        <div class="stat"><span class="stat-l">stock value</span><span class="stat-n" id="statValue">$0</span><span class="stat-s" id="statValueSub">at sale price</span></div>
+        <div class="stat"><span class="stat-l">avg margin</span><span class="stat-n" id="statMargin">—</span><span class="stat-s" id="statMarginSub">after costs + fees</span></div>
+      </div>
+
+      <div class="sect">
+        <h2>my pieces <span class="count" id="piecesCount"></span>
+          <button class="link" id="copy" type="button">copy for spreadsheet</button>
+        </h2>
+        <div class="group table" id="piecesTable">
+          <div class="thead" aria-hidden="true">
+            <span></span><span>piece</span><span>paid</span><span>sale</span><span>margin</span><span>on hand</span><span>reorder at</span><span></span>
+          </div>
+          <ul class="pieces" id="pieces"></ul>
+        </div>
+        <p class="empty" id="piecesEmpty">no pieces yet. run a search in <a href="#find" data-tab="find">find</a>, then press “save as my piece”.</p>
       </div>
     </section>
 
-    <section class="block" id="savedBlock" hidden>
-      <h2>kept <span class="count" id="savedCount"></span>
-        <button class="link" id="refresh" type="button">refresh stock</button>
-      </h2>
-      <ul class="grid" id="saved"></ul>
+    <!-- ── suppliers ────────────────────────────────────────────── -->
+    <section class="tab" id="tab-suppliers" hidden>
+      <div class="intro">
+        <p class="eyebrow">03 · suppliers</p>
+        <h1>where to restock.</h1>
+      </div>
+      <div class="sect">
+        <h2>saved listings <span class="count" id="savedCount"></span>
+          <button class="link" id="refresh" type="button">refresh stock</button>
+        </h2>
+        <div id="saved"></div>
+        <p class="empty" id="savedEmpty">no suppliers yet. tap ♡ on a search result to save it here.</p>
+      </div>
     </section>
 
     <footer>
-      <span>stock is approximate · etsy counts come from the listing, other shops show in / out only</span>
+      <span>stock is approximate · etsy counts come from the listing · other shops show in / out only</span>
+      <span>margin = (sale − paid − etsy fees − extra costs) ÷ sale</span>
     </footer>
   </main>
 
+  <div class="toast" id="toast" role="status" hidden></div>
+
   <template id="card">
     <li class="card">
-      <a class="thumb" target="_blank" rel="noopener"><img alt="" loading="lazy"></a>
+      <a class="thumb" target="_blank" rel="noopener"><img alt="" loading="lazy"><span class="chip match"></span></a>
       <div class="meta">
         <a class="title" target="_blank" rel="noopener"></a>
-        <span class="store"></span>
-        <span class="row">
-          <span class="price"></span>
-          <span class="stock"></span>
+        <span class="sub"><span class="store"></span><span class="stock"></span></span>
+        <div class="ledger">
+          <div class="ledger-top">
+            <span class="margin-n"></span>
+            <span class="profit"></span>
+          </div>
+          <div class="mbar" aria-hidden="true"><i class="b-cost"></i><i class="b-fees"></i><i class="b-profit"></i></div>
+          <div class="ledger-row"><span>paid <b class="cost"></b></span><span>sale <b class="sale"></b></span></div>
+        </div>
+        <span class="foot"><span class="trend"></span><button class="keep" type="button" title="save as a supplier">♡</button></span>
+      </div>
+    </li>
+  </template>
+
+  <template id="pieceRow">
+    <li class="piece">
+      <img class="pthumb" alt="">
+      <div class="pmain">
+        <input class="pname" type="text" aria-label="piece name">
+        <span class="psup"></span>
+      </div>
+      <label class="pfield"><span class="m-lbl">paid</span><span class="money-in"><i>$</i><input class="pcost" type="number" min="0" step="0.01" aria-label="what you paid"></span></label>
+      <label class="pfield"><span class="m-lbl">sale</span><span class="money-in"><i>$</i><input class="pprice" type="number" min="0" step="0.01" aria-label="sale price"></span></label>
+      <div class="pmargin"><span class="m-lbl">margin</span><span class="pm-n"></span><span class="pm-s"></span></div>
+      <div class="pfield"><span class="m-lbl">on hand</span>
+        <span class="stepper">
+          <button type="button" class="minus" aria-label="one sold">−</button>
+          <input class="ponhand" type="number" min="0" step="1" aria-label="on hand">
+          <button type="button" class="plus1" aria-label="one restocked">+</button>
         </span>
-        <span class="row tags">
-          <span class="tag match"></span>
-          <span class="tag deal" hidden>≤ your price</span>
-          <button class="keep" type="button" title="keep">♡</button>
+      </div>
+      <label class="pfield"><span class="m-lbl">reorder at</span><input class="preorder" type="number" min="0" step="1" aria-label="reorder at"></label>
+      <div class="pend">
+        <span class="pstate"></span>
+        <span class="pactions">
+          <button type="button" class="link again">search again</button>
+          <button type="button" class="link remove">remove</button>
         </span>
       </div>
     </li>
