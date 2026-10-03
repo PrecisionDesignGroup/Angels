@@ -23,7 +23,25 @@ needs node 21.7+. no dependencies.
 3. **results** are sorted cheapest first and split into *etsy*, *elsewhere*, and *also sold at*
    (shops grouped with their lowest price). "only same price or cheaper" hides anything above
    your price.
-4. **♡ keep** saves a listing in your browser; *refresh stock* re-checks kept etsy listings.
+4. **profit** on every result: what you'd make selling at your price after etsy fees
+   (6.5% transaction, 3% + $0.25 processing, $0.20 listing). sort by cheapest, most profit,
+   most in stock or best match; show only items at your price or less, or only profitable ones.
+
+## restock tools
+
+- **my pieces.** after a search, press *save as my piece*. each piece keeps its photo, your
+  price, how many you have on hand (− / + as you sell and restock) and a reorder point. pieces at
+  or under the reorder point get a *reorder* tag and are counted at the top.
+- **suppliers.** ♡ on a result saves it as a supplier for the piece you're searching. each piece
+  shows its suppliers, the cheapest one with your profit, and how many are available in total.
+  *search again* re-runs the search for a piece.
+- **stock history.** saved etsy suppliers are re-checked on *refresh stock*, and automatically
+  when you open the site if the last check is over 6 hours old. cards show how many sold since
+  you saved them, a rough "out in ~n days" guess, and price drops.
+- **copy for spreadsheet** copies pieces and suppliers as a table you can paste into google
+  sheets or excel.
+
+pieces and suppliers are saved in your browser, so they stay on that device.
 
 ## keys
 
